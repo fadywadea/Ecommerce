@@ -1,3 +1,5 @@
+"use strict";
+
 import { AppError } from "../utils/appError.js";
 
 export function catchError(fn) {
