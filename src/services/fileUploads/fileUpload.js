@@ -10,7 +10,7 @@ const fileUpload = () => {
     if (file.mimetype.startsWith("image")) {
       cb(null, true);
     } else {
-      cb(new AppError("image only", 400), false);
+      cb(new AppError("images only", 401), false);
     }
   }
   const upload = multer({ storage, fileFilter });
