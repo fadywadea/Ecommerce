@@ -17,14 +17,6 @@ const fileUpload = () => {
   return upload;
 };
 
-// upload single photo
 export const uploadSingleFile = (fieldName) => fileUpload().single(fieldName);
-
-// upload array of photo
-export const uploadArrayOfFile = (fieldName) => fileUpload().array(fieldName);
-
-// upload fields of files
-export const uploadFieldsOfFiles = (fieldName) => fileUpload().fields([
-  { name: "img", maxCount: 1 },
-  { name: "images", maxCount: 10 },
-]);
+export const uploadArrayOfFile = (fieldName) => fileUpload().array(fieldName, 10);
+export const uploadFields = (fieldName) => fileUpload().fields(fields);
