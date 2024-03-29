@@ -2,7 +2,16 @@ import { AppError } from "../utils/appError.js";
 
 export const validation = (schema) => {
   return (req, res, next) => {
-    const { error } = schema.validate({ ...req.body, ...req.params, ...req.query }, { abortEarly: false });
+    // const { error } = schema.validate({ ...req.body, ...req.params, ...req.query }, { abortEarly: false });
+
+    let filter = {};
+    if (req.file) {
+      filter = { image: req.file, ...req.body, ...req.params, ...req.query }
+    } else {
+      filter = { ...req.body, ...req.params, ...req.query }
+    }
+
+    const { error } = schema.validate(filter, { abortEarly: false });
     if (!error) {
       next();
     } else {
