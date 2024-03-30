@@ -1,3 +1,5 @@
+"use strict";
+
 import Joi from "joi";
 
 const addCategoryVal = Joi.object({
