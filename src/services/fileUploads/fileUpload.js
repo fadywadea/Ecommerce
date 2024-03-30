@@ -19,4 +19,4 @@ const fileUpload = () => {
 
 export const uploadSingleFile = (fieldName) => fileUpload().single(fieldName);
 export const uploadArrayOfFile = (fieldName) => fileUpload().array(fieldName, 10);
-export const uploadFields = (fieldName) => fileUpload().fields(fields);
+export const uploadFields = (fieldName) => fileUpload().fields(fieldName);

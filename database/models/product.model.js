@@ -33,7 +33,6 @@ const productSchema = new mongoose.Schema({
   priceAfterDiscount: {
     type: Number,
     min: 0,
-    required: true
   },
   quantity: {
     type: Number,

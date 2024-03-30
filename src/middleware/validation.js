@@ -7,6 +7,8 @@ export const validation = (schema) => {
     let filter = {};
     if (req.file) {
       filter = { image: req.file, ...req.body, ...req.params, ...req.query }
+    } else if (req.files) {
+      filter = { ...req.files, ...req.body, ...req.params, ...req.query }
     } else {
       filter = { ...req.body, ...req.params, ...req.query }
     }
