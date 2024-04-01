@@ -13,7 +13,11 @@ const addSubcategory = catchError(async (req, res, next) => {
 });
 
 const getAllSubcategories = catchError(async (req, res, next) => {
-  let subcategories = await subcategoryModel.find({});
+  let filterObject = {};
+  if (req.params.category) {
+    filterObject.category = req.params.category
+  }
+  let subcategories = await subcategoryModel.find(filterObject).populate("category");
   res.status(200).json({ message: "success", subcategories });
 });
 

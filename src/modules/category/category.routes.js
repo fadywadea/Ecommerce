@@ -5,8 +5,11 @@ import { addCategory, deleteCategory, getAllCategories, getSingleCategory, updat
 import { validation } from "../../middleware/validation.js";
 import { addCategoryVal, paramsIdVal, updateCategoryVal } from "./category.validation.js";
 import { uploadSingleFile } from "../../services/fileUploads/fileUpload.js";
+import subcategoryRouter from "../subcategory/subcategory.routes.js";
 
 const categoryRouter = express.Router();
+
+categoryRouter.use("/:category/subcategories", subcategoryRouter);
 
 categoryRouter
   .route("/")
