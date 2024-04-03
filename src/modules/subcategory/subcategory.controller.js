@@ -1,6 +1,8 @@
 "use strict";
 
 import { subcategoryModel } from "../../../database/models/subcategory.model.js";
+import { catchError } from "../../middleware/catchError.js";
+import { ApiFeatures } from "../../utils/apiFeatures.js";
 import { addOne, deleteOne, findOne, getAll, updateOne } from "../handlers/handlers.js";
 
 const addSubcategory = addOne(subcategoryModel);

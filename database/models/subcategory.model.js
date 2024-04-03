@@ -27,4 +27,8 @@ const subcategorySchema = new mongoose.Schema({
   { timestamps: true }
 );
 
+subcategorySchema.pre("find", function () {
+  this.populate("category");
+})
+
 export const subcategoryModel = mongoose.model("subcategory", subcategorySchema);

@@ -5,6 +5,7 @@ import { validation } from "../../middleware/validation.js";
 import { uploadFields } from "../../services/fileUploads/fileUpload.js";
 import { addProduct, deleteProduct, getAllProducts, getSingleProduct, updateProduct } from "./product.controller.js";
 import { addProductVal, paramsIdVal, updateProductVal } from "./product.validation.js";
+import { conditions } from "../../middleware/ifConditions.js";
 
 const productRouter = express.Router();
 
@@ -13,7 +14,7 @@ productRouter
   .post(uploadFields([
     { name: 'imgCover', maxCount: 1 },
     { name: 'images', maxCount: 10 }
-  ]), validation(addProductVal), addProduct)
+  ]), validation(addProductVal), conditions, addProduct)
   .get(getAllProducts);
 
 productRouter
@@ -22,7 +23,7 @@ productRouter
   .put(uploadFields([
     { name: 'imgCover', maxCount: 1 },
     { name: 'images', maxCount: 10 }
-  ]), validation(updateProductVal), updateProduct)
+  ]), validation(updateProductVal), conditions, updateProduct)
   .delete(validation(paramsIdVal), deleteProduct);
 
 export default productRouter;
