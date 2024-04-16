@@ -1,12 +1,14 @@
 'use strict';
 
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
     required: true,
+    minLength: [1, "too short user name"]
   },
   email: {
     type: String,
@@ -17,26 +19,36 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    minLength: [8, "too short user password"]
   },
-  isActive:{
-    type : Boolean ,
+  verifyEmail: {
+    type: Boolean,
+    default: false,
+  },
+  isActive: {
+    type: Boolean,
     default: true,
   },
-  isBlocked:{
-    type :Boolean ,
+  isBlocked: {
+    type: Boolean,
     default: false,
   },
-  confirmEmail:{
-    type :Boolean ,
-    default: false,
-  },
-  role:{
-    type :String,
-    enum: ['user','admin'],
-    default:'user',
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+    lowercase: true
   }
 },
   { timestamps: true }
 );
 
+// Hash password before saving to database
+userSchema.pre('save', function () {
+  this.password = bcrypt.hashSync(this.password, +process.env.HASH_ROUND);
+});
+
+userSchema.pre('findOneAndUpdate', function () {
+  this._update.password = bcrypt.hashSync(this._update.password, +process.env.HASH_ROUND);
+});
 export const userModel = mongoose.model("user", userSchema);

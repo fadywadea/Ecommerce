@@ -2,12 +2,13 @@
 
 import { catchError } from "../../middleware/catchError.js";
 import { ApiFeatures } from "../../utils/apiFeatures.js";
+import { AppError } from "../../utils/appError.js";
 
 export const addOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = new model(req.body);
     await document.save();
-    res.json({ message: "success", document });
+    res.json({ message: "success", document: { name: req.body.name, title: req.body.title }, });
   });
 };
 
@@ -28,7 +29,7 @@ export const getAll = (model) => {
 export const findOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = await model.findById(req.params.id);
-    !document && res.status(404).json({ message: "document not found" });
+    !document && next(new AppError("Document not found.", 404));
     document && res.status(200).json({ message: "success", document });
   });
 };
@@ -36,7 +37,7 @@ export const findOne = (model) => {
 export const updateOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
-    !document && res.status(404).json({ message: "document not found" });
+    !document && next(new AppError("Document not found.", 404));
     document && res.status(200).json({ message: "success", document });
   });
 };
@@ -44,7 +45,7 @@ export const updateOne = (model) => {
 export const deleteOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = await model.findByIdAndDelete(req.params.id);
-    !document && res.status(404).json({ message: "document not found" });
+    !document && next(new AppError("Document not found.", 404));
     document && res.status(200).json({ message: "success", document });
   });
 };
