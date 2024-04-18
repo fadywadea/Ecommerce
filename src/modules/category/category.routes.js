@@ -7,7 +7,7 @@ import { addCategoryVal, paramsIdVal, updateCategoryVal } from "./category.valid
 import { uploadSingleFile } from "../../services/fileUploads/fileUpload.js";
 import subcategoryRouter from "../subcategory/subcategory.routes.js";
 import { conditions } from "../../middleware/ifConditions.js";
-import { protectedRoutes } from "../auth/auth.controller.js";
+import { authorization, protectedRoutes } from "../auth/auth.controller.js";
 
 const categoryRouter = express.Router();
 
@@ -15,7 +15,7 @@ categoryRouter.use("/:category/subcategories", subcategoryRouter);
 
 categoryRouter
   .route("/")
-  .post(protectedRoutes, uploadSingleFile("image"), validation(addCategoryVal), conditions, addCategory)
+  .post(protectedRoutes, authorization("user"), uploadSingleFile("image"), validation(addCategoryVal), conditions, addCategory)
   .get(getAllCategories);
 
 categoryRouter
