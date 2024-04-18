@@ -7,6 +7,7 @@ const addUserVal = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }).required(),
   password: Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/).required(),
   rePassword: Joi.string().valid(Joi.ref("password")).required(),
+  role: Joi.string().valid("user", "admin").default("user")
 });
 
 const paramsIdVal = Joi.object({

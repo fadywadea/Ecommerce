@@ -1,17 +1,15 @@
 "use strict";
 
 import express from "express";
-import { signin, signup, updatePassword } from "./auth.controller.js";
+import { changePassword, protectedRoutes, signin, signup } from "./auth.controller.js";
+import { checkEmail } from "../../middleware/checkEmailExist.js";
+import { validation } from "../../middleware/validation.js";
+import { changePasswordVal, signinVal, signUpVal } from "./auth.validation.js";
 
 const authRouter = express.Router();
 
-authRouter.route("/")
-  .post(signup)
-
-authRouter.route("/signin")
-  .post(signin);
-
-authRouter.route("/password")
-  .patch(updatePassword);
+authRouter.route("/signup").post(validation(signUpVal), checkEmail, signup);
+authRouter.route("/signin").post(validation(signinVal), signin);
+authRouter.route("/changePassword").patch(validation(changePasswordVal), protectedRoutes, changePassword);
 
 export default authRouter;

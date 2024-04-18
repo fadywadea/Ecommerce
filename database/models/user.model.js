@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
     lowercase: true
+  },
+  passwordUpdatedAt: {
+    type: Date,
+    default: Date.now(),
+    required: true,
   }
 },
   { timestamps: true }
@@ -51,4 +56,5 @@ userSchema.pre('save', function () {
 userSchema.pre('findOneAndUpdate', function () {
   this._update.password = bcrypt.hashSync(this._update.password, +process.env.HASH_ROUND);
 });
+
 export const userModel = mongoose.model("user", userSchema);
