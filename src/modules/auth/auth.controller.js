@@ -6,7 +6,7 @@ import { catchError } from "../../middleware/catchError.js";
 import { userModel } from "../../../database/models/user.model.js";
 import { AppError } from "../../utils/appError.js";
 
-// Sign Up
+// Signup
 export const signup = catchError(async (req, res, next) => {
   let user = new userModel(req.body);
   await user.save();
