@@ -67,7 +67,18 @@ const productSchema = new mongoose.Schema({
     ref: "user",
   }
 },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true } }
 );
+
+// Virtual
+productSchema.virtual("reviews", {
+  ref: "review",
+  localField: "_id",
+  foreignField: "product"
+});
+
+productSchema.pre("findOne", function () {
+  this.populate("reviews");
+});
 
 export const productModel = mongoose.model("product", productSchema);
