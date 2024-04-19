@@ -8,7 +8,7 @@ export const addOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = new model(req.body);
     await document.save();
-    res.json({ message: "success", document: { name: req.body.name, title: req.body.title }, });
+    res.json({ message: "success", document });
   });
 };
 
@@ -36,16 +36,28 @@ export const findOne = (model) => {
 
 export const updateOne = (model) => {
   return catchError(async (req, res, next) => {
-    let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
-    !document && next(new AppError("Document not found.", 404));
-    document && res.status(200).json({ message: "success", document });
+    if (req.user._id) {
+      let document = await model.findOneAndUpdate({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
+      !document && next(new AppError("Document not found.", 404));
+      document && res.status(200).json({ message: "success", document });
+    } else {
+      let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
+      !document && next(new AppError("Document not found.", 404));
+      document && res.status(200).json({ message: "success", document });
+    }
   });
 };
 
 export const deleteOne = (model) => {
   return catchError(async (req, res, next) => {
-    let document = await model.findByIdAndDelete(req.params.id);
-    !document && next(new AppError("Document not found.", 404));
-    document && res.status(200).json({ message: "success", document });
+    if (req.user._id) {
+      let document = await model.findOneAndDelete({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
+      !document && next(new AppError("Document not found.", 404));
+      document && res.status(200).json({ message: "success" });
+    } else {
+      let document = await model.findByIdAndDelete(req.params.id);
+      !document && next(new AppError("Document not found.", 404));
+      document && res.status(200).json({ message: "success" });
+    }
   });
 };

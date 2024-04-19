@@ -41,7 +41,7 @@ export const protectedRoutes = catchError(async (req, res, next) => {
   if (!token) return next(new AppError("Token not provider", 401));
   let decoded = jwt.verify(token, process.env.JWT_KEY);
   let user = await userModel.findById(decoded.userId);
-  if (!user) return next(new AppError("Unauthorized!", 403));
+  if (!user) return next(new AppError("User not found!", 404));
   if (user.passwordUpdatedAt) {
     let time = parseInt(user.passwordUpdatedAt.getTime() / 1000);
     if (time > decoded.iat) return next(new AppError("Token Expired.", 404));
@@ -53,7 +53,7 @@ export const protectedRoutes = catchError(async (req, res, next) => {
 // Authorization
 export const authorization = (...roles) => {
   return catchError(async (req, res, next) => {
-    !roles.includes(req.user.role) && next(new AppError("You don't have permission to perform this action.", 401));
+    !roles.includes(req.user.role) && next(new AppError("You don't have permission to perform this action.", 403));
     roles.includes(req.user.role) && next();
   });
 };

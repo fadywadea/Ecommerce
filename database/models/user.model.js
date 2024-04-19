@@ -42,7 +42,6 @@ const userSchema = new mongoose.Schema({
   passwordUpdatedAt: {
     type: Date,
     default: Date.now(),
-    required: true,
   }
 },
   { timestamps: true }

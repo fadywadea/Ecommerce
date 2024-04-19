@@ -3,25 +3,25 @@
 import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema({
-  name: {
+  text: {
     type: String,
     trim: true,
-    minLength: [2, " too short review text"],
+    required: true,
   },
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "user"
+  rating: {
+    type: Number,
+    min: 0,
+    max: 5,
+    required: true,
   },
   product: {
     type: mongoose.Types.ObjectId,
     ref: "product"
   },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 5
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "user"
   },
-  logo: String
 },
   { timestamps: true }
 );
