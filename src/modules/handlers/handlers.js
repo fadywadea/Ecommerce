@@ -40,11 +40,10 @@ export const updateOne = (model) => {
       let document = await model.findOneAndUpdate({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
       !document && next(new AppError("Document not found.", 404));
       document && res.status(200).json({ message: "success", document });
-    } else {
-      let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
-      !document && next(new AppError("Document not found.", 404));
-      document && res.status(200).json({ message: "success", document });
     }
+    let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
+    !document && next(new AppError("Document not found.", 404));
+    document && res.status(200).json({ message: "success", document });
   });
 };
 
@@ -54,10 +53,9 @@ export const deleteOne = (model) => {
       let document = await model.findOneAndDelete({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
       !document && next(new AppError("Document not found.", 404));
       document && res.status(200).json({ message: "success" });
-    } else {
-      let document = await model.findByIdAndDelete(req.params.id);
-      !document && next(new AppError("Document not found.", 404));
-      document && res.status(200).json({ message: "success" });
     }
+    let document = await model.findByIdAndDelete(req.params.id);
+    !document && next(new AppError("Document not found.", 404));
+    document && res.status(200).json({ message: "success" });
   });
 };
