@@ -7,7 +7,7 @@ import { userModel } from "../../../database/models/user.model.js";
 import { AppError } from "../../utils/appError.js";
 
 // Signup
-export const signup = catchError(async (req, res, next) => {
+const signup = catchError(async (req, res, next) => {
   let user = new userModel(req.body);
   await user.save();
   let token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_KEY);
@@ -15,7 +15,7 @@ export const signup = catchError(async (req, res, next) => {
 });
 
 // Signin
-export const signin = catchError(async (req, res, next) => {
+const signin = catchError(async (req, res, next) => {
   let user = await userModel.findOne({ email: req.body.email });
   if (!user) return next(new AppError("Invalid Email.", 401));
   if (!bcrypt.compareSync(req.body.password, user.password)) return next(new AppError("Invalid Password.", 401));
@@ -25,7 +25,7 @@ export const signin = catchError(async (req, res, next) => {
 });
 
 // Update password
-export const changePassword = catchError(async (req, res, next) => {
+const changePassword = catchError(async (req, res, next) => {
   let { password, newPassword } = req.body;
   let user = await userModel.findById(req.user._id);
   if (!user) return next(new AppError("No User Found!", 404));
@@ -36,7 +36,7 @@ export const changePassword = catchError(async (req, res, next) => {
 });
 
 // Authentication
-export const protectedRoutes = catchError(async (req, res, next) => {
+const protectedRoutes = catchError(async (req, res, next) => {
   let { token } = req.headers;
   if (!token) return next(new AppError("Token not provider", 401));
   let decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -51,9 +51,10 @@ export const protectedRoutes = catchError(async (req, res, next) => {
 });
 
 // Authorization
-export const authorization = (...roles) => {
+const authorization = (...roles) => {
   return catchError(async (req, res, next) => {
     !roles.includes(req.user.role) && next(new AppError("You don't have permission to perform this action.", 403));
     roles.includes(req.user.role) && next();
   });
 };
+export { signup, signin, changePassword, protectedRoutes, authorization };
