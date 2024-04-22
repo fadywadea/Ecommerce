@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema({
   passwordUpdatedAt: {
     type: Date,
     default: Date.now(),
+  },
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }],
+  addresses: {
+    street: String,
+    city: String,
+    phone: String,
   }
 },
   { timestamps: true }
