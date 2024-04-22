@@ -4,7 +4,7 @@ import { catchError } from "../../middleware/catchError.js";
 import { ApiFeatures } from "../../utils/apiFeatures.js";
 import { AppError } from "../../utils/appError.js";
 
-export const addOne = (model) => {
+const addOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = new model(req.body);
     await document.save();
@@ -12,7 +12,7 @@ export const addOne = (model) => {
   });
 };
 
-export const getAll = (model) => {
+const getAll = (model) => {
   return catchError(async (req, res, next) => {
     let getModel = model.find();
     if (req.body.category) {
@@ -26,7 +26,7 @@ export const getAll = (model) => {
   });
 };
 
-export const findOne = (model) => {
+const findOne = (model) => {
   return catchError(async (req, res, next) => {
     let document = await model.findById(req.params.id);
     !document && next(new AppError("Document not found.", 404));
@@ -34,7 +34,7 @@ export const findOne = (model) => {
   });
 };
 
-export const updateOne = (model) => {
+const updateOne = (model) => {
   return catchError(async (req, res, next) => {
     if (req.user._id) {
       let document = await model.findOneAndUpdate({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
@@ -47,7 +47,7 @@ export const updateOne = (model) => {
   });
 };
 
-export const deleteOne = (model) => {
+const deleteOne = (model) => {
   return catchError(async (req, res, next) => {
     if (req.user._id) {
       let document = await model.findOneAndDelete({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
@@ -59,3 +59,5 @@ export const deleteOne = (model) => {
     document && res.status(200).json({ message: "success" });
   });
 };
+
+export { addOne, getAll, findOne, updateOne, deleteOne };
