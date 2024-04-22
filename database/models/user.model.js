@@ -43,7 +43,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }],
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'product'
+  }],
   addresses: {
     street: String,
     city: String,
