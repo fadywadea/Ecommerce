@@ -36,7 +36,7 @@ const findOne = (model) => {
 
 const updateOne = (model) => {
   return catchError(async (req, res, next) => {
-    if (req.user._id) {
+    if (req.user) {
       let document = await model.findOneAndUpdate({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
       !document && next(new AppError("Document not found.", 404));
       document && res.status(200).json({ message: "success", document });
@@ -49,7 +49,7 @@ const updateOne = (model) => {
 
 const deleteOne = (model) => {
   return catchError(async (req, res, next) => {
-    if (req.user._id) {
+    if (req.user) {
       let document = await model.findOneAndDelete({ _id: req.params.id, user: req.user._id }, req.body, { new: true });
       !document && next(new AppError("Document not found.", 404));
       document && res.status(200).json({ message: "success" });
