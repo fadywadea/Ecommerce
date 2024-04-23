@@ -57,4 +57,5 @@ const authorization = (...roles) => {
     roles.includes(req.user.role) && next();
   });
 };
+
 export { signup, signin, changePassword, protectedRoutes, authorization };
