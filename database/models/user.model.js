@@ -47,11 +47,11 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'product'
   }],
-  addresses: {
+  addresses: [{
     street: String,
     city: String,
     phone: String,
-  }
+  }]
 },
   { timestamps: true }
 );
