@@ -58,11 +58,11 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving to database
 userSchema.pre('save', function () {
-  this.password = bcrypt.hashSync(this.password, +process.env.HASH_ROUND);
+  if (this.password) this.password = bcrypt.hashSync(this.password, +process.env.HASH_ROUND);
 });
 
 userSchema.pre('findOneAndUpdate', function () {
-  this._update.password = bcrypt.hashSync(this._update.password, +process.env.HASH_ROUND);
+  if (this._update.password) this._update.password = bcrypt.hashSync(this._update.password, +process.env.HASH_ROUND);
 });
 
 export const userModel = mongoose.model("user", userSchema);
