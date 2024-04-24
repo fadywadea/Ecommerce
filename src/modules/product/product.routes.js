@@ -11,19 +11,15 @@ const productRouter = express.Router();
 
 productRouter
   .route("/")
-  .post(uploadFields([
-    { name: 'imgCover', maxCount: 1 },
-    { name: 'images', maxCount: 10 }
-  ]), validation(addProductVal), conditions, addProduct)
+  .post(uploadFields([{ name: 'imgCover', maxCount: 1 }, { name: 'images', maxCount: 10 }]),
+    validation(addProductVal), conditions, addProduct)
   .get(getAllProducts);
 
 productRouter
   .route("/:id")
   .get(validation(paramsIdVal), getSingleProduct)
-  .put(uploadFields([
-    { name: 'imgCover', maxCount: 1 },
-    { name: 'images', maxCount: 10 }
-  ]), validation(updateProductVal), conditions, updateProduct)
+  .put(uploadFields([{ name: 'imgCover', maxCount: 1 }, { name: 'images', maxCount: 10 }]),
+    validation(updateProductVal), conditions, updateProduct)
   .delete(validation(paramsIdVal), deleteProduct);
 
 export default productRouter;
