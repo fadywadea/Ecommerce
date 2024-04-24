@@ -5,6 +5,7 @@ import addressRouter from "./address/address.routes.js";
 import authRouter from "./auth/auth.routes.js";
 import brandRouter from "./brand/brand.routes.js";
 import categoryRouter from "./category/category.routes.js";
+import couponRouter from "./coupon/coupon.routes.js";
 import productRouter from "./product/product.routes.js";
 import reviewRouter from "./review/review.routes.js";
 import subcategoryRouter from "./subcategory/subcategory.routes.js";
@@ -22,6 +23,7 @@ export const bootstrap = (app) => {
   app.use("/api/v1/reviews", reviewRouter);
   app.use("/api/v1/wishlist", wishlistRouter);
   app.use("/api/v1/addresses", addressRouter);
+  app.use("/api/v1/coupons", couponRouter);
 
   app.use(globalError);
 };
