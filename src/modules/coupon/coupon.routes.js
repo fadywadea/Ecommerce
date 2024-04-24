@@ -4,7 +4,7 @@ import express from "express";
 import { validation } from "../../middleware/validation.js";
 import { addCouponVal, paramsIdVal, updateCouponVal } from "./coupon.validation.js";
 import { addCoupon, deleteCoupon, getAllCoupons, getSingleCoupon, updateCoupon } from "./coupon.controller.js";
-import { protectedRoutes } from "../auth/auth.controller.js";
+import { authorization, protectedRoutes } from "../auth/auth.controller.js";
 
 const couponRouter = express.Router();
 
