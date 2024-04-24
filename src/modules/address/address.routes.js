@@ -8,6 +8,8 @@ import { addAddress, getAddress, removeAddress } from "./address.controller.js";
 
 const addressRouter = express.Router();
 
+// ToDo: create update address
+
 addressRouter
   .route("/")
   .patch(protectedRoutes, authorization("user"), validation(addAddressVal), addAddress)
