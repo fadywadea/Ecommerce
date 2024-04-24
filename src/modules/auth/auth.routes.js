@@ -10,6 +10,7 @@ const authRouter = express.Router();
 
 authRouter.route("/signup").post(validation(signUpVal), checkEmail, signup);
 authRouter.route("/signin").post(validation(signinVal), signin);
+// TODO: protectedRoutes before validation \!/
 authRouter.route("/changePassword").patch(validation(changePasswordVal), protectedRoutes, changePassword);
 
 export default authRouter;
