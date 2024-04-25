@@ -6,18 +6,19 @@ import { addSubcategoryVal, paramsIdVal, updateSubcategoryVal } from "./subcateg
 import { addSubcategory, deleteSubcategory, getAllSubcategories, getSingleSubcategory, updateSubcategory } from "./subcategory.controller.js";
 import { conditions } from "../../middleware/ifConditions.js";
 import { searchParams } from "../../middleware/searchParams.js";
+import { protectedRoutes } from "../auth/auth.controller.js";
 
 const subcategoryRouter = express.Router({ mergeParams: true });
 
 subcategoryRouter
   .route("/")
-  .post(validation(addSubcategoryVal), conditions, addSubcategory)
+  .post(protectedRoutes, validation(addSubcategoryVal), conditions, addSubcategory)
   .get(searchParams, getAllSubcategories);
 
 subcategoryRouter
   .route("/:id")
   .get(validation(paramsIdVal), getSingleSubcategory)
-  .put(validation(updateSubcategoryVal), conditions, updateSubcategory)
-  .delete(validation(paramsIdVal), deleteSubcategory);
+  .put(protectedRoutes, validation(updateSubcategoryVal), conditions, updateSubcategory)
+  .delete(protectedRoutes, validation(paramsIdVal), deleteSubcategory);
 
 export default subcategoryRouter;
