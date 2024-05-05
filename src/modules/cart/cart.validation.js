@@ -13,7 +13,11 @@ const paramsIdVal = Joi.object({
 
 const updateQTYVal = Joi.object({
   id: Joi.string().hex().length(24),
-  quantity: Joi.number().required(),
+  quantity: Joi.number().integer().options({ convert: false }).required(),
 });
 
-export { addToCartVal, paramsIdVal, updateQTYVal };
+const applyCouponVal = Joi.object({
+  coupon: Joi.string().min(1).max(200).required().trim(),
+});
+
+export { addToCartVal, paramsIdVal, updateQTYVal, applyCouponVal };
