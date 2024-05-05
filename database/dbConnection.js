@@ -2,7 +2,7 @@
 
 import { connect } from "mongoose";
 
-export const dbConnection = connect("mongodb://127.0.0.1:27017/Ecommerce")
+export const dbConnection = connect("mongodb+srv://E-commerce:eNfXhNcOEAn6QSJj@e-commerce.c2lrhoo.mongodb.net/e-commerce-1")
   .then(() => {
     console.log("Database Connected Successfully");
   })
