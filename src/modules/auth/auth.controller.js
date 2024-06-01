@@ -8,44 +8,43 @@ import { AppError } from "../../utils/appError.js";
 
 // Signup
 const signup = catchError(async (req, res, next) => {
-  let user = new userModel(req.body);
+  const user = new userModel(req.body);
   await user.save();
-  let token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_KEY);
+  const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_KEY);
   res.status(201).json({ message: "success", token });
 });
 
 // Signin
 const signin = catchError(async (req, res, next) => {
-  let user = await userModel.findOne({ email: req.body.email });
-  if (!user) return next(new AppError("Invalid Email.", 401));
-  if (!bcrypt.compareSync(req.body.password, user.password)) return next(new AppError("Invalid Password.", 401));
+  const { email, password } = req.body;
+  const user = await userModel.findOne({ email });
+  if (!user) return next(new AppError("Wrong Email.", 401));
+  if (!bcrypt.compareSync(password, user.password)) return next(new AppError("Wrong Password.", 401));
   const { name, _id, role } = user;
-  let token = jwt.sign({ userId: _id, role }, process.env.JWT_KEY);
+  const token = jwt.sign({ userId: _id, role }, process.env.JWT_KEY);
   res.status(200).json({ message: `Welcome ${name}.`, token });
 });
 
 // Update password
 const changePassword = catchError(async (req, res, next) => {
-  let { password, newPassword } = req.body;
-  let user = await userModel.findById(req.user._id);
+  const { password, newPassword } = req.body;
+  const user = await userModel.findById(req.user._id);
   if (!user) return next(new AppError("No User Found!", 404));
   if (!bcrypt.compareSync(password, user.password)) return next(new AppError("Wrong Password!", 401));
   const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_KEY);
-  await userModel.findByIdAndUpdate(req.user._id, { password: newPassword, passwordUpdatedAt: Date.now() }, { new: true });
+  await userModel.findByIdAndUpdate(req.user._id, { password: newPassword, passwordUpdatedAt: Date.now() },
+    { new: true });
   res.status(200).json({ message: "success", token });
 });
 
 // Authentication
 const protectedRoutes = catchError(async (req, res, next) => {
-  let { token } = req.headers;
+  const { token } = req.headers;
   if (!token) return next(new AppError("Token not provider", 401));
-  let decoded = jwt.verify(token, process.env.JWT_KEY);
-  let user = await userModel.findById(decoded.userId);
+  const decoded = jwt.verify(token, process.env.JWT_KEY);
+  const user = await userModel.findById(decoded.userId).lean();
   if (!user) return next(new AppError("User not found!", 404));
-  if (user.passwordUpdatedAt) {
-    let time = parseInt(user.passwordUpdatedAt.getTime() / 1000);
-    if (time > decoded.iat) return next(new AppError("Token Expired.", 404));
-  }
+  if (user.passwordUpdatedAt && user.passwordUpdatedAt.getTime() > decoded.iat * 1000) return next(new AppError("Token Expired.", 404));
   req.user = user;
   next();
 });
