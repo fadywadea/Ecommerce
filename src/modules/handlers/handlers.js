@@ -40,28 +40,36 @@ const updateOne = (model) => {
     let document;
     if (req.user) {
       document = await model.findOneAndUpdate(
-        { _id: req.params.id, $or: [{ createdBy: req.user._id }, { user: req.user._id }] },
+        {
+          _id: req.params.id, $or: [{ createdBy: req.user._id },
+          { user: req.user._id }]
+        },
         req.body,
         { new: true }
       );
     } else {
       document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true });
     }
-    if (!document) {
-      return next(new AppError("Document not found.", 404));
-    }
-    res.status(200).json({ message: "success", document });
+    !document && next(new AppError("Document not found.", 404));
+    document && res.status(200).json({ message: "success", document });
   });
 };
 
 const deleteOne = (model) => {
   return catchError(async (req, res, next) => {
+    let document;
     if (req.user) {
-      let document = await model.findOneAndDelete({ _id: req.params.id, $or: [{ createdBy: req.user._id }, { user: req.user._id }] }, req.body, { new: true });
-      !document && next(new AppError("Document not found.", 404));
-      return document && res.status(200).json({ message: "success" });
+      document = await model.findOneAndDelete(
+        {
+          _id: req.params.id, $or: [{ createdBy: req.user._id },
+          { user: req.user._id }]
+        },
+        req.body,
+        { new: true }
+      );
+    } else {
+      document = await model.findByIdAndDelete(req.params.id);
     }
-    let document = await model.findByIdAndDelete(req.params.id);
     !document && next(new AppError("Document not found.", 404));
     document && res.status(200).json({ message: "success" });
   });
