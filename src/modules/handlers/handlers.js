@@ -6,8 +6,10 @@ import { AppError } from "../../utils/appError.js";
 
 const addOne = (model) => {
   return catchError(async (req, res, next) => {
-    if (req.user) req.body.createdBy = req.user._id;
-    let document = new model(req.body);
+    if (req.user) {
+      req.body.createdBy = req.user._id;
+    }
+    const document = new model(req.body);
     await document.save();
     res.json({ message: "success", document });
   });
@@ -16,8 +18,10 @@ const addOne = (model) => {
 const getAll = (model) => {
   return catchError(async (req, res, next) => {
     let getModel = model.find();
-    if (req.body.category) getModel = model.find(req.body);
-    let apiFeatures = new ApiFeatures(getModel, req.query).pagination().fields().sort().search().filter();
+    if (req.body.category) {
+      getModel = model.find(req.body);
+    }
+    const apiFeatures = new ApiFeatures(getModel, req.query).pagination().fields().sort().search().filter();
     const document = await apiFeatures.mongooseQuery;
     res.status(200).json({ message: "success", page: apiFeatures.pageNumber, document });
   });
@@ -25,7 +29,7 @@ const getAll = (model) => {
 
 const findOne = (model) => {
   return catchError(async (req, res, next) => {
-    let document = await model.findById(req.params.id);
+    const document = await model.findById(req.params.id);
     !document && next(new AppError("Document not found.", 404));
     document && res.status(200).json({ message: "success", document });
   });
@@ -33,14 +37,20 @@ const findOne = (model) => {
 
 const updateOne = (model) => {
   return catchError(async (req, res, next) => {
+    let document;
     if (req.user) {
-      let document = await model.findOneAndUpdate({ _id: req.params.id, $or: [{ createdBy: req.user._id }, { user: req.user._id }] }, req.body, { new: true });
-      !document && next(new AppError("Document not found.", 404));
-      return document && res.status(200).json({ message: "success", document });
+      document = await model.findOneAndUpdate(
+        { _id: req.params.id, $or: [{ createdBy: req.user._id }, { user: req.user._id }] },
+        req.body,
+        { new: true }
+      );
+    } else {
+      document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true });
     }
-    let document = await model.findByIdAndUpdate(req.params.id, req.body, { new: true, });
-    !document && next(new AppError("Document not found.", 404));
-    document && res.status(200).json({ message: "success", document });
+    if (!document) {
+      return next(new AppError("Document not found.", 404));
+    }
+    res.status(200).json({ message: "success", document });
   });
 };
 
