@@ -50,7 +50,6 @@ const updateProductVal = Joi.object({
   category: Joi.string().hex().length(24),
   subcategory: Joi.string().hex().length(24),
   brand: Joi.string().hex().length(24),
-  createdBy: Joi.string().hex().length(24).optional(),
 
   imgCover: Joi.array().items(Joi.object({
     fieldname: Joi.string().required(),
