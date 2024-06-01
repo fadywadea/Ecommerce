@@ -41,8 +41,10 @@ const updateOne = (model) => {
     if (req.user) {
       document = await model.findOneAndUpdate(
         {
-          _id: req.params.id, $or: [{ createdBy: req.user._id },
-          { user: req.user._id }]
+          _id: req.params.id,
+          $or: [
+            { createdBy: req.user._id }, { user: req.user._id }
+          ]
         },
         req.body,
         { new: true }
@@ -61,8 +63,11 @@ const deleteOne = (model) => {
     if (req.user) {
       document = await model.findOneAndDelete(
         {
-          _id: req.params.id, $or: [{ createdBy: req.user._id },
-          { user: req.user._id }]
+          _id: req.params.id,
+          $or: [
+            { createdBy: req.user._id },
+            { user: req.user._id }
+          ]
         },
         req.body,
         { new: true }
