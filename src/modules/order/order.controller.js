@@ -27,12 +27,13 @@ const createOrderCash = catchError(async (req, res, next) => {
   await order.save();
 
   const option = cart.cartItems.map((prod) => {
-    return ({
-      updateOne: {
-        "filter": { _id: prod.product },
-        "update": { $inc: { sold: prod.quantity, quantity: -prod.quantity } },
-      }
-    });
+    return (
+      {
+        updateOne: {
+          "filter": { _id: prod.product },
+          "update": { $inc: { sold: prod.quantity, quantity: -prod.quantity } },
+        }
+      });
   });
   await productModel.bulkWrite(option);
 
