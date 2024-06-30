@@ -42,6 +42,8 @@ const addToCart = catchError(async (req, res, next) => {
 });
 
 const removeItemFromCart = catchError(async (req, res, next) => {
+  let user = await cartModel.findOne({ user: req.user._id });
+  if (!user) return next(new AppError("Cart not found.", 404));
   let cart = await cartModel.
     findOneAndUpdate({ user: req.user._id }, { $pull: { cartItems: { _id: req.params.id } } }, { new: true });
   !cart && next(new AppError("The cart is empty.", 404));
