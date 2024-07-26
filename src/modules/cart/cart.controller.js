@@ -78,16 +78,18 @@ const clearUserCart = catchError(async (req, res, next) => {
 });
 
 const applyCoupon = catchError(async (req, res, next) => {
-  let coupon = await couponModel.findOne({ code: req.body.coupon, expires: { $gte: Date.now() } });
-  if (!coupon) return next(new AppError({ message: "Invalid coupon" }));
+  const coupon = await couponModel.findOne({ code: req.body.coupon, expires: { $gte: Date.now() } });
+  if (!coupon) return next(new AppError("Invalid coupon", 403));
 
-  let cart = await cartModel.findOne({ user: req.user._id });
-  if (!cart) return next(new AppError("The cart is empty.", 404));
-  let totalPriceAfterDiscount = cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
+  const cart = await cartModel.findOne({ user: req.user._id });
+  !cart && next(new AppError("The cart is empty.", 404));
+
+  const totalPriceAfterDiscount = cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
   cart.totalPriceAfterDiscount = totalPriceAfterDiscount;
   cart.discount = coupon.discount;
+
   await cart.save();
-  res.json({ message: "success", cart });
+  cart && res.json({ message: "success", cart });
 });
 
 export { addToCart, removeItemFromCart, updateQuantity, getLoggedUserCart, clearUserCart, applyCoupon };

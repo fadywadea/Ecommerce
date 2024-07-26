@@ -8,6 +8,9 @@ import { AppError } from "../../utils/appError.js";
 
 // Signup
 const signup = catchError(async (req, res, next) => {
+  // Check if the email already exists
+  const checkExists = await userModel.findOne({ email: req.body.email });
+  if (checkExists) return next(new AppError("Email already exists.", 409));
   const user = new userModel(req.body);
   await user.save();
   const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_KEY);

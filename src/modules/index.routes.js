@@ -1,6 +1,7 @@
 "use strict";
 
 import { globalError } from "../middleware/globalError.js";
+import { AppError } from "../utils/appError.js";
 import addressRouter from "./address/address.routes.js";
 import authRouter from "./auth/auth.routes.js";
 import brandRouter from "./brand/brand.routes.js";
@@ -28,6 +29,9 @@ export const bootstrap = (app) => {
   app.use("/api/v1/coupons", couponRouter);
   app.use("/api/v1/carts", cartRouter);
   app.use("/api/v1/orders", orderRouter);
+
+  // Error messages if there are any errors in the routes
+  app.use("*", (req, res, next) => { next(new AppError(`Endpoint not found: ${req.originalUrl}`, 404)); });
 
   app.use(globalError);
 };

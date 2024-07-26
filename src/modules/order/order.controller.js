@@ -7,11 +7,15 @@ import { catchError } from "../../middleware/catchError.js";
 import { AppError } from "../../utils/appError.js";
 
 const createOrderCash = catchError(async (req, res, next) => {
+
+  //1- get cart -> cartId
   const cart = await cartModel.findById(req.params.id);
   if (!cart) throw new AppError("Cart not found.", 404);
-
+  
+  //2-total order price
   const totalOrderPrice = cart.totalPriceAfterDiscount ? cart.totalPriceAfterDiscount : cart.totalPrice;
 
+  //3—create order —> cash
   const soldOutPromises = cart.cartItems.map(async (prod) => {
     const product = await productModel.findById(prod.product);
     if (prod.quantity > product.quantity) throw new AppError("Sold out.", 404);
@@ -26,6 +30,7 @@ const createOrderCash = catchError(async (req, res, next) => {
   });
   await order.save();
 
+  //4—increment sold & decrement quantity
   const option = cart.cartItems.map((prod) => {
     return (
       {
@@ -36,6 +41,9 @@ const createOrderCash = catchError(async (req, res, next) => {
       });
   });
   await productModel.bulkWrite(option);
+
+  //5—clear cart
+  await cartModel.findByIdAndDelete(req.params.id);
 
   res.json({ message: "success", order });
 });

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
-    unique: [true, "title is required"],
+    unique: [true, "The title must be unique"],
     trim: true,
     required: true,
     minLength: [2, " too short product title"],

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const couponSchema = new mongoose.Schema({
   code: {
     type: String,
-    unique: [true, "name is required"],
+    unique: [true, "The code must be unique"],
     trim: true,
     required: true,
     minLength: [1, "too short coupon code"]

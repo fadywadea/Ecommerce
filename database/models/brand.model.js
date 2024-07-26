@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const brandSchema = new mongoose.Schema({
   name: {
     type: String,
-    unique: [true, "name is required"],
+    unique: [true, "The name must be unique"],
     trim: true,
     required: true,
     minLength: [2, " too short brand name"],
