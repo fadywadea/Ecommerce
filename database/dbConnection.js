@@ -1,8 +1,11 @@
 "use strict";
 
 import { connect } from "mongoose";
+import dotenv from "dotenv";
 
-export const dbConnection = connect("mongodb+srv://fady_e-commerce:iotiFgybBzZ0qu4B@e-commerce.c2lrhoo.mongodb.net/e-commerce-1")
+dotenv.config();
+
+export const dbConnection = connect(`mongodb+srv://${process.env.EMAIL_DATABASE}:${process.env.PASSWORD_DATABASE}@e-commerce.c2lrhoo.mongodb.net/e-commerce-11`)
   .then(() => {
     console.log("Database Connected Successfully");
   })
